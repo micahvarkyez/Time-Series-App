@@ -1,5 +1,3 @@
-pip install streamlit pandas yfinance statsmodels matplotlib
-
 import streamlit as st
 import pandas as pd
 import yfinance as yf

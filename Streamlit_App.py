@@ -6,6 +6,7 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from datetime import datetime
 import numpy as np
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 # Title
 st.title('Sales Forecasting App')

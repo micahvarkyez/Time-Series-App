@@ -69,3 +69,18 @@ if st.button('Fetch Data'):
     ax.set_ylabel('Price')
     plt.legend()
     st.pyplot(fig)
+
+    # Calculate metrics
+    actual = data[column][-forecast_horizon:]
+    forecast_values = forecast_mean[:len(actual)]
+    rmse = np.sqrt(mean_squared_error(actual, forecast_values))
+    mae = mean_absolute_error(actual, forecast_values)
+    mape = np.mean(np.abs((actual - forecast_values) / actual)) * 100
+    r_squared = 1 - np.sum((forecast_values - actual) ** 2) / np.sum((actual - np.mean(actual)) ** 2)
+
+    # Display metrics
+    st.subheader('Forecasting Performance Metrics')
+    st.write(f'RMSE: {rmse:.2f}')
+    st.write(f'MAE: {mae:.2f}')
+    st.write(f'MAPE: {mape:.2f}%')
+    st.write(f'R-squared: {r_squared:.2f}')

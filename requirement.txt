@@ -1,0 +1,7 @@
+statsmodels
+numpy
+seaborn
+openpyxl
+geopandas
+matplotlib
+pandas

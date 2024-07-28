@@ -4,6 +4,7 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.statespace.sarimax import SARIMAX
+from fbprophet import Prophet
 from datetime import datetime
 import numpy as np
 from io import BytesIO
@@ -16,6 +17,7 @@ ticker = st.text_input('Enter Stock Ticker Symbol (e.g., AAPL)', 'AAPL')
 forecast_horizon = st.number_input('Enter Forecast Horizon (months)', min_value=1, max_value=36, value=12)
 start_date = st.date_input('Start Date', value=datetime(2010, 1, 1))
 end_date = st.date_input('End Date', value=datetime.today())
+model_type = st.selectbox('Select Model', ['SARIMA', 'Prophet'])
 
 # Fetch Data
 if st.button('Fetch Data'):
@@ -53,24 +55,45 @@ if st.button('Fetch Data'):
     st.pyplot(fig)
 
     # Forecasting with SARIMA
-    st.subheader('Forecasting with SARIMA')
-    model = SARIMAX(data[column], order=(1, 1, 1), seasonal_order=(1, 1, 1, 12))
-    model_fit = model.fit(disp=False)
-    # Model summary
-    st.subheader('Model Summary')
-    st.text(model_fit.summary())
-    forecast = model_fit.get_forecast(steps=forecast_horizon)
-    forecast_ci = forecast.conf_int()
+    if model_type == 'SARIMA':
+       st.subheader('Forecasting with SARIMA')
+       model = SARIMAX(data[column], order=(1, 1, 1), seasonal_order=(1, 1, 1, 12))
+       model_fit = model.fit(disp=False)
+       
+       # Model summary
+       st.subheader('Model Summary')
+       st.text(model_fit.summary())
+       forecast = model_fit.get_forecast(steps=forecast_horizon)
+       forecast_ci = forecast.conf_int()
 
-    # Plotting
-    fig, ax = plt.subplots(figsize=(10, 5))
-    data[column].plot(ax=ax, label='Actual')
-    forecast.predicted_mean.plot(ax=ax, label='Forecast')
-    ax.fill_between(forecast_ci.index, forecast_ci.iloc[:, 0], forecast_ci.iloc[:, 1], color='k', alpha=.2)
-    ax.set_xlabel('Date')
-    ax.set_ylabel('Price')
-    plt.legend()
-    st.pyplot(fig)
+       # Plotting
+       fig, ax = plt.subplots(figsize=(10, 5))
+       data[column].plot(ax=ax, label='Actual')
+       forecast.predicted_mean.plot(ax=ax, label='Forecast')
+       ax.fill_between(forecast_ci.index, forecast_ci.iloc[:, 0], forecast_ci.iloc[:, 1], color='k', alpha=.2)
+       ax.set_xlabel('Date')
+       ax.set_ylabel('Price')
+       plt.legend()
+       st.pyplot(fig)
+
+    elif model_type == 'Prophet':
+        df = data.reset_index()[['Date', column]].rename(columns={'Date': 'ds', column: 'y'})
+        model = Prophet()
+        model.fit(df)
+                
+        # Create future dataframe
+        future = model.make_future_dataframe(periods=forecast_horizon, freq='M')
+        forecast = model.predict(future)
+                
+        # Plotting
+        fig, ax = plt.subplots(figsize=(10, 5))
+        ax.plot(df['ds'], df['y'], label='Actual')
+        ax.plot(forecast['ds'], forecast['yhat'], label='Forecast')
+        ax.fill_between(forecast['ds'], forecast['yhat_lower'], forecast['yhat_upper'], color='k', alpha=.2)
+        ax.set_xlabel('Date')
+        ax.set_ylabel('Price')
+        plt.legend()
+        st.pyplot(fig)
 
     # Save plot as image or PDF
     img_buffer = BytesIO()

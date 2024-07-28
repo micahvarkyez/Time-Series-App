@@ -6,6 +6,7 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from datetime import datetime
 import numpy as np
+from io import BytesIO
 
 # Title
 st.title('Time Series Forecaster')
@@ -70,3 +71,13 @@ if st.button('Fetch Data'):
     ax.set_ylabel('Price')
     plt.legend()
     st.pyplot(fig)
+
+    # Save plot as image or PDF
+    img_buffer = BytesIO()
+    pdf_buffer = BytesIO()
+    fig.savefig(img_buffer, format='png')
+    fig.savefig(pdf_buffer, format='pdf')
+    img_buffer.seek(0)
+    pdf_buffer.seek(0)
+    st.download_button(label='Download Forecast as Image', data=img_buffer, file_name='forecast.png', mime='image/png')
+    st.download_button(label='Download Forecast as PDF', data=pdf_buffer, file_name='forecast.pdf', mime='application/pdf')

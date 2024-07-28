@@ -54,6 +54,9 @@ if st.button('Fetch Data'):
     st.subheader('Forecasting with SARIMA')
     model = SARIMAX(data[column], order=(1, 1, 1), seasonal_order=(1, 1, 1, 12))
     model_fit = model.fit(disp=False)
+    # Model summary
+    st.subheader('Model Summary')
+    st.text(model_fit.summary())
     forecast = model_fit.get_forecast(steps=forecast_horizon)
     forecast_ci = forecast.conf_int()
 

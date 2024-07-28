@@ -11,8 +11,8 @@ st.title('Sales Forecasting App')
 
 # User Inputs
 ticker = st.text_input('Enter Stock Ticker Symbol (e.g., AAPL)', 'AAPL')
-forecast_horizon = st.number_input('Enter Forecast Horizon (months)', min_value=1, max_value=36)
-start_date = st.date_input('Start Date', value=datetime())
+forecast_horizon = st.number_input('Enter Forecast Horizon (months)', min_value=1, max_value=36, value=12)
+start_date = st.date_input('Start Date', value=datetime(2010, 1, 1))
 end_date = st.date_input('End Date', value=datetime.today())
 
 # Fetch Data

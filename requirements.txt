@@ -7,3 +7,4 @@ matplotlib
 pandas
 yfinance
 prophet
+fbprophet

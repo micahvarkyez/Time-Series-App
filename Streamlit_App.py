@@ -72,7 +72,7 @@ if st.button('Fetch Data'):
 
     # Calculate metrics
     actual = data[column][-forecast_horizon:]
-    forecast_values = forecast_mean[:len(actual)]
+    forecast_values = forecast.predicted_mean[:len(actual)]
     rmse = np.sqrt(mean_squared_error(actual, forecast_values))
     mae = mean_absolute_error(actual, forecast_values)
     mape = np.mean(np.abs((actual - forecast_values) / actual)) * 100

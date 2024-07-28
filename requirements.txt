@@ -6,4 +6,3 @@ geopandas
 matplotlib
 pandas
 yfinance
-sklearn

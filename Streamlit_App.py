@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from datetime import datetime
+import numpy as np
 
 # Title
 st.title('Sales Forecasting App')

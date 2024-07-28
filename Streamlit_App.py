@@ -6,10 +6,9 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from datetime import datetime
 import numpy as np
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 # Title
-st.title('Sales Forecasting App')
+st.title('Time Series Forecaster')
 
 # User Inputs
 ticker = st.text_input('Enter Stock Ticker Symbol (e.g., AAPL)', 'AAPL')
@@ -71,18 +70,3 @@ if st.button('Fetch Data'):
     ax.set_ylabel('Price')
     plt.legend()
     st.pyplot(fig)
-
-    # Calculate metrics
-    actual = data[column][-forecast_horizon:]
-    forecast_values = forecast.predicted_mean[:len(actual)]
-    rmse = np.sqrt(mean_squared_error(actual, forecast_values))
-    mae = mean_absolute_error(actual, forecast_values)
-    mape = np.mean(np.abs((actual - forecast_values) / actual)) * 100
-    r_squared = 1 - np.sum((forecast_values - actual) ** 2) / np.sum((actual - np.mean(actual)) ** 2)
-
-    # Display metrics
-    st.subheader('Forecasting Performance Metrics')
-    st.write(f'RMSE: {rmse:.2f}')
-    st.write(f'MAE: {mae:.2f}')
-    st.write(f'MAPE: {mape:.2f}%')
-    st.write(f'R-squared: {r_squared:.2f}')

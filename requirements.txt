@@ -6,3 +6,5 @@ geopandas
 matplotlib
 pandas
 yfinance
+fbprophet
+Prophet

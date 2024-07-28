@@ -31,16 +31,23 @@ if st.button('Fetch Data'):
     data['Date'] = pd.to_datetime(data['Date'])
     data.set_index('Date', inplace=True)
 
-
     # Time Series Decomposition
     st.subheader('Time Series Decomposition')
-    ts_data = data['Adj Close']
-    result = seasonal_decompose(data[ts_data], model='additive', period=12)
-    fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(10, 8))
+    column = 'Adj Close'  # Typically, we forecast based on the adjusted closing price
+    result = seasonal_decompose(data[column], model='multiplicative', period=12)
+            
+    # Plot the decomposed components
+    fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
     result.observed.plot(ax=ax1)
+    ax1.set_ylabel('Observed')
     result.trend.plot(ax=ax2)
+    ax2.set_ylabel('Trend')
     result.seasonal.plot(ax=ax3)
+    ax3.set_ylabel('Seasonal')
     result.resid.plot(ax=ax4)
+    ax4.set_ylabel('Residual')
+    plt.xlabel('Date')
+    plt.tight_layout()
     st.pyplot(fig)
 
     # Forecasting with SARIMA
